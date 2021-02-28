@@ -1,0 +1,114 @@
+df.info() # informatiile dataframe-ului, tip coloane, coloane non-null, nume coloane 
+
+df.describe() # calculeaza count, mean, ... max pentru toate datele
+
+rcParams['figure.figsize'] = 11, 8 # setarea dimensiunii figurii
+df['years'] = (df['age'] / 365).round().astype('int') # adaugaarea unei coloane noi pentru calcularea varstei in ani
+sns.countplot(x='years', hue='cardio', data = df, palette="Set2"); # generarea figurii; x = varsta, hue = criteriul pe baza caruia se face count
+
+df_categorical = df.loc[:,['cholesterol','gluc', 'smoke', 'alco', 'active']] # filtrare pe baza coloanelor
+df_categorical
+
+
+meltedData= pd.melt(df_categorical) # transformarea coloanelor in valori pe linii
+meltedData
+
+
+sns.countplot(x="variable", hue="value",data= meltedData); # afisarea noii figuri pe variabile
+
+
+df_long = pd.melt(df, id_vars=['cardio'], value_vars=['cholesterol','gluc', 'smoke', 'alco', 'active']) # cream un df cu 3 coloane, cu valorile coloanelor originale
+df_long
+
+
+sns.catplot(x="variable", hue="value", col="cardio", data=df_long, kind="count"); # cream un category plot, similar count plotului, dar cu un param in plus col
+
+
+df.groupby('gender')['height'].mean()
+
+
+df['gender'].value_counts()
+
+
+df.groupby('gender')['alco'].sum()
+
+
+df['cardio'].value_counts(normalize=True)
+
+
+pd.crosstab(df['cardio'],df['gender'],normalize=True)
+
+
+df.isnull().values.any()
+
+
+df.describe()
+
+
+olddf = df.copy()
+olddf
+
+
+df = olddf.copy()
+
+
+df.drop(df[(df['height'] > df['height'].quantile(0.975)) | (df['height'] < df['height'].quantile(0.025))].index,inplace=True)
+df.drop(df[(df['weight'] > df['weight'].quantile(0.975)) | (df['weight'] < df['weight'].quantile(0.025))].index,inplace=True)
+
+
+
+print("Diastilic pressure is higher than systolic one in {0} cases".format(df[df['ap_lo']> df['ap_hi']].shape[0]))
+
+
+
+df.drop(df[(df['ap_hi'] > df['ap_hi'].quantile(0.975)) | (df['ap_hi'] < df['ap_hi'].quantile(0.025))].index,inplace=True)
+df.drop(df[(df['ap_lo'] > df['ap_lo'].quantile(0.975)) | (df['ap_lo'] < df['ap_lo'].quantile(0.025)) | (df['ap_lo'] < 0)].index,inplace=True)
+df.drop(df[(df['ap_hi'] < 0) | (df['ap_lo'] > df['ap_hi'])].index,inplace=True)
+
+
+df['id'].count()
+
+
+blood_pressure = df.loc[:,['ap_lo','ap_hi']]
+blood_pressure
+
+
+blood_pressureMelt = blood_pressure.melt()
+blood_pressureMelt
+
+
+sns.boxplot(x = 'variable',y = 'value',data = blood_pressureMelt)
+print("Diastilic pressure is higher than systolic one in {0} cases".format(df[df['ap_lo']> df['ap_hi']].shape[0]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
